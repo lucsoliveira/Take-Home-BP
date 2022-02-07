@@ -1,6 +1,8 @@
-(ns takehome.core)
+(ns takehome.core
+  (:require [takehome.rules :as t.rules]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn can-access? [object purchase]
+  ; access rules
+  (cond
+    (= (:type purchase) :patriota) (t.rules/patriota-rules object purchase) ; Patriota
+    :else false))
