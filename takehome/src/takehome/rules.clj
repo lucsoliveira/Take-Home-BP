@@ -34,3 +34,16 @@
     (= (:type object) :course) false
     (= (:type object) :patron) false
     :else false))
+
+; Rules access for Premium
+(defn premium-rules [object purchase]
+
+  (cond
+    (= (:type object) :movie) (user-still-registered? purchase)
+    (= (:type object) :series) (user-still-registered? purchase)
+    (= (:type object) :podcast) (user-still-registered? purchase)
+    (= (:type object) :debate) (user-still-registered? purchase)
+    (= (:type object) :interview) (user-still-registered? purchase)
+    (= (:type object) :course) (user-still-registered? purchase)
+    (= (:type object) :patron) false
+    :else false))
