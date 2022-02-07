@@ -1,0 +1,257 @@
+Aprendizado Clojure
+
+- Comandos -
+
+lein new [template] [nome]
+
+Ex.: lein new app youtube
+
+Para executar o JVM com o projeto no terminal:
+lein repl  
+
+Para executar os testes
+lein test :only namespace.patriota-test
+
+Para iniciar ele no Power Sheel:
+- powershell -command clj
+
+clj #para executar a jvm no terminal
+
+- Lean Clojure -
+
+Clojure always compiles the expression before executing it; Clojure is always compiled to JVM bytecode. There is no Clojure interpreter.
+
+https://clojure.org/guides/learn/syntax
+
+:alpha          ; keyword
+:release/alpha  ; keyword with namespace
+nil             ; null value
+#"[0-9]+"       ; regular expression
+
+Literal collections
+Clojure also includes literal syntax for four collection types:
+
+'(1 2 3)     ; list
+[1 2 3]      ; vector
+#{1 2 3}     ; set
+{:a 1, :b 2} ; map
+
+(def total-de-produtos 15) ;definição de um simbolo
+(println total-de-produtos)
+(def total-produtos (+ total-produtos 3)) ;para redefinir com outro valor
+
+Em clojure, a operação (+, -, /, *) sempre antecede os elementos, sempre é o primeiro argumento. Essa é a notação prefix da matemática.
+
+Vetor:
+(def estoque ["Mochila", "Estojo"])
+
+(estoque x); onde retornará o item com x sendo o indice
+
+(count estoque); retorna a qtde
+(conj estoque "Cadeira"); o conj não altera o conteudo do vetor original
+
+Ele acrescenta no novo vetor retornado.
+
+(def estoque(conj estoque "Cadeira"))
+Agora o vetor retornado sera apontado para o estoque anterior.
+
+Função:
+O padrão do Clojure é usar o "-".
+
+(defn imprime-mensagem
+	[]
+	(println "Bem vindo!"))
+
+
+esqueleto :
+
+(if condicao
+    verdadeiro
+    else)
+
+
+(defn maior-que-zero
+	[valor]
+	(if (> valor 0)
+	    "verdadeiro"
+	    "falso"))
+
+de forma resumida, pode fazer-se assim:
+
+(defn maior-que-zero?
+	[valor]
+	(> valor 0))
+
+Onde retornará true ou false
+
+Símbolo:
+(def desconto 0.10) ;criará global
+
+(let [desconto 0.10]
+	(* valor-bruto (- 1 desconto)))
+
+Dessa forma, o let retorna um simbolo local, como boa pratica de prog. O let é fundamental.
+
+Uma forma de usar condicionais dentro da função:
+
+(defn valor-descontado
+    "Retorna o valor com desconto de 10% se o valor bruto for maior que 100"
+    [valor-bruto]
+    (if (> valor-bruto 100)
+        (let    [taxa-desconto (/ 10 100)
+                 desconto (* valor-bruto taxa-desconto)]
+        (println "Calculando desconto de " desconto)
+        (- valor-bruto desconto))     
+    valor-bruto))
+
+
+Mapas:
+
+(def transacoes
+[
+  {:nome "venda" :valor 12.99}
+  {:nome "compra":valor -20}
+ ])
+
+Iteração:
+; o map aplica em cada item, como se fosse um for
+(println "map" (map valor-descontado precos))
+
+; Filter
+(println (range 10))
+
+; um exemplo pra retornar somente os valores pares
+(println (filter even? (range 10)))
+
+(println "Vetor: " precos)
+; so retorna se for true para aplicar desconto
+(println "Retorno dos items que são aplicaveis o desconto: " (filter aplica? precos))
+(println "Map após o filter retorndo com desconto: " (map valor-descontado (filter aplica? precos)))
+
+; Reduce
+; aqui ele soma todos os elementos do vetor e retorna a soma total
+(println ( reduce + precos))
+
+(defn minha-soma
+  [valor-1 valor-2]
+  (println "Somando valor 1 e 2")
+  (+ valor-1 valor-2)
+  )
+
+(println (reduce minha-soma precos))
+
+Maps:
+
+(def estoque { "Mochila" 10, "Camiseta" 5})
+
+(println estoque)
+(println "Numero de Elementos: " (count estoque))
+(println "Chaves são: " (keys estoque))
+(println "Valores são: " (vals estoque))
+
+; keyword
+; o comum é usar keyword em maps
+
+(def estoque { :mochila 10, :camiseta 5})
+
+; para adicionar um valor
+
+; assoc
+(println (assoc estoque :cadeira 3))
+(println estoque)
+
+; update
+; usando o "inc" para incrementar um
+(println (update estoque :mochila inc))
+
+; para desassociar do mapa
+(println (dissoc estoque :mochila))
+
+; forma prefix
+(println (:quantidade ( :mochila pedido)))
+
+; Threading
+(println (-> pedido
+             :mochila
+             :quantidade))
+
+
+; Thread last
+(defn total-do-pedido
+  [pedido]
+  (->> pedido
+       (map preco-dos-produtos ,,,)
+       (reduce + ,,,)))
+
+(println "Total do pedido: " ( total-do-pedido pedido))
+
+; o mais comum é utilizar da seguinte forma:
+(defn preco-total-do-produto [produto]
+  (* (:quantidade produto) (:preco produto)))
+
+(defn total-do-pedido
+  [pedido]
+  (->> pedido
+       vals (map preco-total-do-produto ,,,)
+       (reduce + ,,,)))
+
+(println "Total:" (total-do-pedido pedido))
+
+; Função com duas funções diferentes
+
+(defn minha-funcao
+  ([p1] (println "Chamou a de 1 parametro: " p1))
+  ([p1 p2] (println "Chamou a de 2 parametros: " p1 p2)))
+
+(println (minha-funcao 1))
+(println (minha-funcao 1 2))
+
+
+- IDE Inte -
+
+Alt + Shift + L = para executar o namespace no compilador
+
+- Introdução à Programação Funcional com Clojure -
+
+https://www.youtube.com/watch?v=ORcTVFDxAUU
+
+Programação funcional. Combinar funções simples para fazer uma função complexa.
+
+(defn aplica-desconto?
+  ([valor-bruto]
+   (> valor-bruto 100)))
+
+(defn valor-descontado
+  "Retorna o valor com desconto de 10% se o valor bruto for maior que 100"
+  [valor-bruto]
+  (if (aplica-desconto? valor-bruto)
+    (let [taxa-desconto (/ 10 100)
+          desconto (* valor-bruto taxa-desconto)]
+      (- valor-bruto desconto))
+    valor-bruto))
+
+;(println (precos 17)) aqui da uma excessão
+; a funcao get ja tem um tratamento quando esta fora do indice
+(println (get precos 17))
+
+
+- palestra Clojure -
+
+https://www.youtube.com/watch?v=_kGwRVuH6mU
+
+Clojure não tem classe.
+Ele otimza o uso de listas, o que seria Array.
+
+Clojure trabalha com AST, uma Arvore de Sintaxe.
+
+O Clojure abstrai a ideia de que o código é como um dado.
+
+As coisas são imutáveis em Clojure.
+
+A biblitoeca Javelin. 
+Ele tem macros.
+
+
+- Thread First e Thread last em Clojure -
+https://www.youtube.com/watch?v=iVS5OT02mdc&list=PL421UNPLzYzsV9eLmxwHb1vymisjFhtM9&index=3
+
