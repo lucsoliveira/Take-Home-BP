@@ -30,7 +30,7 @@
     (= (:type object) :series) (user-still-registered? purchase)
     (= (:type object) :podcast) (user-still-registered? purchase)
     (= (:type object) :debate) (user-still-registered? purchase)
-    (= (:type object) :interview) (or (user-still-registered? purchase) (released-between-begin-end-registration? object purchase) )
+    (= (:type object) :interview) (and (user-still-registered? purchase) (released-between-begin-end-registration? object purchase) )
     (= (:type object) :course) false
     (= (:type object) :patron) false
     :else false))

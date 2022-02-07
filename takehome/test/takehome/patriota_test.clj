@@ -59,7 +59,7 @@
 
 ; Patriota can access interview if the interview was
 ; released between the period of your subscription OR he still active
-(deftest test-patriota-interview
+(deftest test-patriota-interview-1
   (are [result purchase] (= result
                             (sub/can-access?
                               {:type :interview :name "Congresso Brasil Paralelo - Rafael Nogueira", :released-at (time/local-date-time "2019-11-16T21:40:51.579")}
@@ -68,14 +68,29 @@
                          false {:type               :patriota
                                 :subscription-start (time/local-date-time "2017-01-24T11:46:22.811")
                                 :subscription-end   (time/local-date-time "2019-01-24T11:46:22.811") }
-                         ; between
-                         true  {:type               :patriota
+                         ; between, but user subscribe is not active
+                         false  {:type               :patriota
                                 :subscription-start (time/local-date-time "2019-01-24T11:46:22.811")
                                 :subscription-end   (time/local-date-time "2020-01-24T11:46:22.811") }
-                         ; subscription still active
-                         true {:type               :patriota
+                         ; subscription still active, but not subscribed between released
+                         false {:type               :patriota
                                :subscription-start (time/local-date-time "2022-01-24T11:46:22.811")
                                :subscription-end   (time/local-date-time "2023-01-24T11:46:22.811") }
+                         ))
+
+(deftest test-patriota-interview-2
+  (are [result purchase] (= result
+                            (sub/can-access?
+                              {:type :interview :name "Entrevista mais Recente Exemplo", :released-at (time/local-date-time "2022-02-16T21:40:51.579")}
+                              purchase))
+                         ; before
+                         false {:type               :patriota
+                                :subscription-start (time/local-date-time "2017-01-24T11:46:22.811")
+                                :subscription-end   (time/local-date-time "2019-01-24T11:46:22.811") }
+                         ; between, user subscribe activated
+                         true  {:type               :patriota
+                                :subscription-start (time/local-date-time "2022-01-24T11:46:22.811")
+                                :subscription-end   (time/local-date-time "2023-01-24T11:46:22.811") }
                          ))
 
 ; Patriota cannot access Cursos
